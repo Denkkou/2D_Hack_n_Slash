@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SDL.h>
 #include <functional>
+#include <ctime>
 
 #include "GameActor.h"
 
@@ -17,6 +18,7 @@ public:
 	SDL_Event _event;
 
 	void bindCommands();
+	bool getTime(char* buffer, int bufferSize);
 private:
 	//buttons
 	std::function<void(GameActor&)> buttonX_;

@@ -22,30 +22,31 @@ void InputHandler::bindCommands() {
 //needs SDL quit code and a way of handling escape
 std::function<void(GameActor&)> InputHandler::handleInput() {
     while (SDL_PollEvent(&_event)) {
+
+        //get time and store
+        SDL_Keycode keyPressed = _event.key.keysym.sym;
+        char timestr[32];
+        getTime(timestr, 32);
+
         if (_event.type == SDL_KEYDOWN && !_event.key.repeat) {
+            SDL_Log("[%s] [KEY DOWN] time %d; code %d; char %s;", timestr, _event.key.timestamp, keyPressed, SDL_GetKeyName(keyPressed));
             switch (_event.key.keysym.sym) {
             case SDLK_x:
-                SDL_Log("X Key Pressed");
                 return buttonX_;
                 break;
             case SDLK_z:
-                SDL_Log("Z Key Pressed");
                 return buttonZ_;
                 break;
             case SDLK_LEFT:
-                SDL_Log("Left Pressed");
                 return buttonLeft_;
                 break;
             case SDLK_RIGHT:
-                SDL_Log("Right Pressed");
                 return buttonRight_;
                 break;
             case SDLK_ESCAPE:
-                SDL_Log("Escape Pressed");
                 return buttonEscape_;
                 break;
             case SDLK_LSHIFT:
-                SDL_Log("LShift Pressed");
                 return buttonLShift_;
                 break;
             }
@@ -53,4 +54,17 @@ std::function<void(GameActor&)> InputHandler::handleInput() {
     }
     //if nothing is pressed, do nothing
     return DoNothing;
+}
+
+//get formatted current time when called
+bool InputHandler::getTime(char* buffer, int bufferSize) {
+    //get current time
+    time_t currentTime = std::time(0);
+    struct tm info;
+    localtime_s(&info, &currentTime);
+
+    //format time to readable
+    size_t written = strftime(buffer, bufferSize, "%d/%m/%y %T", &info);
+
+    return written != 0;
 }

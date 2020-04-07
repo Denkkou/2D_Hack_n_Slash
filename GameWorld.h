@@ -5,7 +5,7 @@
 #include <SDL.h>
 
 #include "InputHander.h"
-#include "GameActor.h"
+#include "Player.h"
 
 class GameWorld {
 public:
@@ -17,8 +17,7 @@ public:
 
 	InputHandler inputHandler;
 
-	//this will need to be changed to a derived player subclass
-	GameActor player;
+	Player player;
 
 	void Init();
 	void Run();
