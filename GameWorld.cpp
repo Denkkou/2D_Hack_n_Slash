@@ -23,13 +23,11 @@ void GameWorld::Init() {
 //implement a timer sync function
 void GameWorld::Run() {
     while (!done) {
-        //actor still needs to be built
-        //it needs to be the basic engine behind
-        //a player or npc -> implement movement and
-        //the relevant commands
+        //reset timer, begin counting
+        timer.resetTicks();
 
         //receive input and handle
-        std::function<void(GameActor&)> command = inputHandler.handleInput();   
+        std::function<void(GameActor&)> command = inputHandler.handleInput(done);   
 
         //execute command on player
         command(player);
@@ -39,11 +37,16 @@ void GameWorld::Run() {
 
         //push changes to renderer
         Render();
+
+        //delay for rest of frame
+        if (timer.getTicks() < DELTA_TIME)
+            SDL_Delay(DELTA_TIME - timer.getTicks());
+
     }
 }
 
 void GameWorld::Update() {
-
+    player.Update();
 }
 
 void GameWorld::Render() {

@@ -12,6 +12,9 @@ public:
 	virtual void Attack();
 	virtual void MoveLeft();
 	virtual void MoveRight();
+
+	virtual void DoNothing();
+
 	virtual void Update();
 	virtual void Render(SDL_Renderer* aRenderer);
 };

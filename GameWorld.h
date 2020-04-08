@@ -6,6 +6,7 @@
 
 #include "InputHander.h"
 #include "Player.h"
+#include "FrameTimer.h"
 
 class GameWorld {
 public:
@@ -27,6 +28,8 @@ public:
 
 	void Quit();
 private:
+	FrameTimer timer;
+	const int DELTA_TIME = 16;
 	bool done = false;
 };
 

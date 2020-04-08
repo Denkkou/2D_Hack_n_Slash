@@ -1,7 +1,7 @@
 #include "InputHander.h"
 
 //define the commands
-void DoNothing(GameActor& actor){ /*nothing*/ }
+void DoNothing(GameActor& actor) { actor.DoNothing(); }
 void JumpCommand(GameActor& actor) { actor.Jump(); }
 void AttackCommand(GameActor& actor) { actor.Attack(); }
 void MoveLeftCommand(GameActor& actor) { actor.MoveLeft(); }
@@ -20,38 +20,19 @@ void InputHandler::bindCommands() {
 }
 
 //needs SDL quit code and a way of handling escape
-std::function<void(GameActor&)> InputHandler::handleInput() {
+std::function<void(GameActor&)> InputHandler::handleInput(bool& done) {
     while (SDL_PollEvent(&_event)) {
-
-        //get time and store
-        SDL_Keycode keyPressed = _event.key.keysym.sym;
-        char timestr[32];
-        getTime(timestr, 32);
-
-        if (_event.type == SDL_KEYDOWN && !_event.key.repeat) {
-            SDL_Log("[%s] [KEY DOWN] time %d; code %d; char %s;", timestr, _event.key.timestamp, keyPressed, SDL_GetKeyName(keyPressed));
-            switch (_event.key.keysym.sym) {
-            case SDLK_x:
-                return buttonX_;
-                break;
-            case SDLK_z:
-                return buttonZ_;
-                break;
-            case SDLK_LEFT:
-                return buttonLeft_;
-                break;
-            case SDLK_RIGHT:
-                return buttonRight_;
-                break;
-            case SDLK_ESCAPE:
-                return buttonEscape_;
-                break;
-            case SDLK_LSHIFT:
-                return buttonLShift_;
-                break;
-            }
-        }
+        if (_event.type == SDL_QUIT)
+            done = true;
     }
+
+    if (keystate[SDL_SCANCODE_X]) return buttonX_;
+    if (keystate[SDL_SCANCODE_Z]) return buttonZ_;
+    if (keystate[SDL_SCANCODE_LEFT]) return buttonLeft_;
+    if (keystate[SDL_SCANCODE_RIGHT]) return buttonRight_;
+    if (keystate[SDL_SCANCODE_ESCAPE]) return buttonEscape_;
+    if (keystate[SDL_SCANCODE_LSHIFT]) return buttonLShift_;
+    
     //if nothing is pressed, do nothing
     return DoNothing;
 }

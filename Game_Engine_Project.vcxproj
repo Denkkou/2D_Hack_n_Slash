@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorStateMachine.h" />
+    <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="GameActor.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="InputHander.h" />
