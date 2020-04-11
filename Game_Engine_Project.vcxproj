@@ -24,6 +24,8 @@
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="TerrainContainer.cpp" />
+    <ClCompile Include="TerrainObject.cpp" />
     <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +38,8 @@
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="InputHander.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="TerrainContainer.h" />
+    <ClInclude Include="TerrainObject.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

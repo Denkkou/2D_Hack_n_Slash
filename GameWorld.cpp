@@ -13,9 +13,6 @@ void GameWorld::Init() {
     window = SDL_CreateWindow("SCH18683720 - Game Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, SDL_WINDOW_RESIZABLE);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    //bind commands in input handler
-    inputHandler.bindCommands();
-
     //log initialisation
     SDL_Log("Game World initialised");
 }
@@ -27,10 +24,7 @@ void GameWorld::Run() {
         timer.resetTicks();
 
         //receive input and handle
-        std::function<void(GameActor&)> command = inputHandler.handleInput(done);   
-
-        //execute command on player
-        command(player);
+        inputHandler.HandleInput(done, player);   
        
         //update state of the game world
         Update();
@@ -46,6 +40,8 @@ void GameWorld::Run() {
 }
 
 void GameWorld::Update() {
+    //call the update function of all containers
+    terrainContainer.Update();
     player.Update();
 }
 
@@ -55,6 +51,8 @@ void GameWorld::Render() {
     SDL_RenderClear(renderer);
 
     //call the render function of all containers
+    terrainContainer.Render(renderer);
+    player.Render(renderer);
 
     //push changes
     SDL_RenderPresent(renderer);

@@ -7,6 +7,7 @@
 #include "InputHander.h"
 #include "Player.h"
 #include "FrameTimer.h"
+#include "TerrainContainer.h"
 
 class GameWorld {
 public:
@@ -17,7 +18,7 @@ public:
 	SDL_Renderer* renderer;
 
 	InputHandler inputHandler;
-
+	TerrainContainer terrainContainer;
 	Player player;
 
 	void Init();
