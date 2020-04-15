@@ -5,17 +5,14 @@
 
 class TerrainObject {
 public:
-	TerrainObject();
+	TerrainObject(int posX, int posY, int width, int height);
 	~TerrainObject();
 
 	void Update();
 	void Render(SDL_Renderer* aRenderer);
 	void Collision();
 
-	int blockPosX;
-	int blockPosY;
-	int blockWidth;
-	int blockHeight;
+	SDL_Rect block;
 };
 
 #endif

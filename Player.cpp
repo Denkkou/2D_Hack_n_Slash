@@ -25,12 +25,11 @@ Player::Player() {
 
 Player::~Player(){ SDL_Log("Player destroyed"); }
 
-//using a player state machine to handle player state - maybe try events?
 void Player::Update() {
 	//apply a constant downwards force
 	velocity.Y += weight;
 
-	//temporary floor
+	//temporary floor (set grounded and jumping on collision instead)
 	if (posY > 800) {
 		posY = 800;
 		velocity.Y = 0;

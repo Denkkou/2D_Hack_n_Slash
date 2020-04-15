@@ -3,7 +3,10 @@
 TerrainContainer::TerrainContainer() {
     SDL_Log("Terrain Container Created");
     //create the level pieces in here
-
+    AddObject(0, 850, 1600, 50); //base
+    AddObject(600, 600, 300, 25);
+    AddObject(200, 700, 300, 25);
+    AddObject(1000, 700, 300, 25);
 }
 
 TerrainContainer::~TerrainContainer() {
@@ -14,13 +17,7 @@ TerrainContainer::~TerrainContainer() {
 }
 
 void TerrainContainer::AddObject(int posX, int posY, int width, int height) {
-    TerrainObject* aTerrainPiece = new TerrainObject();
-
-    aTerrainPiece->blockPosX = posX;
-    aTerrainPiece->blockPosY = posY;
-    aTerrainPiece->blockHeight = height;
-    aTerrainPiece->blockWidth = width;
-
+    TerrainObject* aTerrainPiece = new TerrainObject(posX, posY, width, height);
     this->aListOfTerrainObjects.push_back(aTerrainPiece);
 }
 
