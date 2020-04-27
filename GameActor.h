@@ -25,9 +25,11 @@ public:
 	int maxSpeed;
 	int acceleration;
 	int jumpStrength;
-	int jumpCounter;
 	int attackStrength;
 	int weight;
+	int maxFallSpeed;
+
+	int jumpCooldown;
 
 	int posX;
 	int posY;

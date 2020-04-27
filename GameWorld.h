@@ -32,6 +32,8 @@ private:
 	FrameTimer timer;
 	const int DELTA_TIME = 16;
 	bool done = false;
+
+	bool detectedCollision(Player &player, TerrainObject* object);
 };
 
 #endif

@@ -2,11 +2,11 @@
 
 TerrainContainer::TerrainContainer() {
     SDL_Log("Terrain Container Created");
+
     //create the level pieces in here
     AddObject(0, 850, 1600, 50); //base
-    AddObject(600, 600, 300, 25);
-    AddObject(200, 700, 300, 25);
-    AddObject(1000, 700, 300, 25);
+    AddObject(500, 700, 300, 50);
+    AddObject(800, 650, 300, 50);
 }
 
 TerrainContainer::~TerrainContainer() {

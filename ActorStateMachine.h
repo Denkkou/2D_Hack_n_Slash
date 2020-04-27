@@ -5,7 +5,7 @@ class ActorStateMachine {
 public:
 	bool IS_GROUNDED;
 
-	bool IS_ATTEMPTING_JUMP;
+	bool CAN_JUMP;
 	bool IS_JUMPING;
 	//player is falling if not jumping and not grounded
 

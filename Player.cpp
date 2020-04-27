@@ -8,12 +8,13 @@ Player::Player() {
 	velocity.Y = 0;
 
 	//initialise the sprite
-	basicSprite.h = 64;
-	basicSprite.w = 48;
+	basicSprite.h = height;
+	basicSprite.w = width;
 
 	//set up other attributes
 	health = 100;
 	maxSpeed = 10;
+	maxFallSpeed = 15;
 	acceleration = 0;
 	jumpStrength = 20;
 	attackStrength = 0;
@@ -29,16 +30,17 @@ void Player::Update() {
 	//apply a constant downwards force
 	velocity.Y += weight;
 
-	//temporary floor (set grounded and jumping on collision instead)
-	if (posY > 800) {
-		posY = 800;
-		velocity.Y = 0;
-		stateMachine.IS_GROUNDED = true;
-		stateMachine.IS_JUMPING = false;
-	}
-	else {
-		stateMachine.IS_GROUNDED = false;
-	}
+	//increment cooldown
+	if(stateMachine.IS_GROUNDED)
+		jumpCooldown++;
+
+	//cooldown reset
+	if (jumpCooldown >= 5)
+		stateMachine.CAN_JUMP = true;
+
+	//cap max fall
+	if (velocity.Y + weight > maxFallSpeed)
+		velocity.Y = maxFallSpeed;
 
 	//idle check
 	if (velocity.X != 0 || velocity.Y != 0)
@@ -73,9 +75,11 @@ void Player::Render(SDL_Renderer* aRenderer) {
 
 //overridden commands
 void Player::Jump() { //make variable
-	if (stateMachine.IS_GROUNDED) {
+	if (stateMachine.IS_GROUNDED && stateMachine.CAN_JUMP) {
 		stateMachine.IS_JUMPING = true;
+		stateMachine.CAN_JUMP = false;
 		velocity.Y -= jumpStrength;
+		jumpCooldown = 0;
 	}
 
 	SDL_Log("Player Jump");
@@ -93,4 +97,11 @@ void Player::MoveLeft() {
 void Player::MoveRight() {
 	acceleration = 1;
 	SDL_Log("Player Move Right");
+}
+
+void Player::MoveUpOnCollision(int yValueOfTerrain) {
+	if (velocity.Y > 0) {
+		posY = yValueOfTerrain - height;
+		velocity.Y = 0;
+	}
 }

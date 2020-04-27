@@ -1,11 +1,14 @@
 #include "TerrainObject.h"
 
-TerrainObject::TerrainObject(int posX, int posY, int width, int height) {
-	//create the block
-	block.x = posX;
-	block.y = posY;
-	block.w = width;
-	block.h = height;
+TerrainObject::TerrainObject(int posX, int posY, int width,  int blockHeight) {
+
+	X = posX;
+	Y = posY;
+	W = width;
+	H = 10; //upper ledge
+
+	//init the block
+	InitBlock(X, Y, W, blockHeight);
 }
 
 TerrainObject::~TerrainObject() {
@@ -19,6 +22,9 @@ void TerrainObject::Render(SDL_Renderer* aRenderer) {
 	SDL_RenderFillRect(aRenderer, &block);
 }
 
-void TerrainObject::Collision() {
-
+void TerrainObject::InitBlock(int x, int y, int w, int h) {
+	block.x = x;
+	block.y = y;
+	block.w = w;
+	block.h = h;
 }

@@ -16,7 +16,13 @@ public:
 	virtual void Update();
 	virtual void Render(SDL_Renderer* aRenderer);
 
+	int width = 48;
+	int height = 64;
+	int feetBoxOffset = 10;
+
 	SDL_Rect basicSprite;
+
+	void MoveUpOnCollision(int yValueOfTerrain);
 };
 
 #endif
