@@ -63,8 +63,6 @@ void Player::Update() {
 	//update basic sprite position
 	basicSprite.x = posX;
 	basicSprite.y = posY;
-
-	SDL_Log("Player X %i Player Y %i", posX, posY);
 }
 
 void Player::Render(SDL_Renderer* aRenderer) {
@@ -100,8 +98,21 @@ void Player::MoveRight() {
 }
 
 void Player::MoveUpOnCollision(int yValueOfTerrain) {
-	if (velocity.Y > 0) {
+	if (velocity.Y > 0 && posY < yValueOfTerrain) {
 		posY = yValueOfTerrain - height;
 		velocity.Y = 0;
+
+		//handle flags
+		stateMachine.IS_GROUNDED = true;
+		stateMachine.IS_JUMPING = false;
 	}
+}
+
+void Player::MoveSidewaysOnCollision(int xValueOfTerrain, int widthOfTerrain) {
+	if (posX <= xValueOfTerrain)
+		posX = xValueOfTerrain - width;
+	else
+		posX = xValueOfTerrain + widthOfTerrain;
+
+	velocity.X = 0;
 }

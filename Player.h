@@ -22,7 +22,8 @@ public:
 
 	SDL_Rect basicSprite;
 
-	void MoveUpOnCollision(int yValueOfTerrain);
+	virtual void MoveUpOnCollision(int yValueOfTerrain);
+	virtual void MoveSidewaysOnCollision(int xValueOfTerrain, int widthOfTerrain);
 };
 
 #endif

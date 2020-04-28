@@ -19,6 +19,9 @@ public:
 	virtual void Update() = 0;
 	virtual void Render(SDL_Renderer* aRenderer) = 0;
 
+	virtual void MoveUpOnCollision(int yValueOfTerrain) = 0;
+	virtual void MoveSidewaysOnCollision(int xValueOfTerrain, int widthOfTerrain) = 0;
+
 	ActorStateMachine stateMachine;
 
 	int health;

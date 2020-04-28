@@ -10,7 +10,7 @@ GameWorld::~GameWorld() {
 
 void GameWorld::Init() {
     //create window and renderer
-    window = SDL_CreateWindow("SCH18683720 - Game Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("SCH18683720 - Game Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     //log initialisation
@@ -47,14 +47,20 @@ void GameWorld::Update() {
     //reset grounding
     player.stateMachine.IS_GROUNDED = false;
 
-    //detect for collision
-    for (int i = 0; i < terrainContainer.aListOfTerrainObjects.size(); i++) {
-        if (detectedCollision(player, terrainContainer.aListOfTerrainObjects[i])) {
-            SDL_Log("Collision detected");
+    //detect for collision of platform terrain
+    for (int i = 0; i < terrainContainer.aListOfPlatformObjects.size(); i++) {
+        if (detectedCollision(player, terrainContainer.aListOfPlatformObjects[i])) {
             //move player up to object's y
-            player.MoveUpOnCollision(terrainContainer.aListOfTerrainObjects[i]->Y);
-            player.stateMachine.IS_GROUNDED = true;
-            player.stateMachine.IS_JUMPING = false;
+            player.MoveUpOnCollision(terrainContainer.aListOfPlatformObjects[i]->Y);
+        }
+    }
+
+    //detect for collision of pillar terrain
+    for (int i = 0; i < terrainContainer.aListOfPillarObjects.size(); i++) {
+        if (detectedCollision(player, terrainContainer.aListOfPillarObjects[i])) {
+            //reposition player, cancel their velocity
+            player.MoveSidewaysOnCollision(terrainContainer.aListOfPillarObjects[i]->X, terrainContainer.aListOfPillarObjects[i]->W);
+            player.MoveUpOnCollision(terrainContainer.aListOfPillarObjects[i]->Y);
         }
     }
 }
@@ -74,13 +80,12 @@ void GameWorld::Render() {
 
 bool GameWorld::detectedCollision(Player &player, TerrainObject* object) {
     //detect collision
-        if (player.posX < object->X + object->W &&
-            player.posX + player.width > object->X&&
-            player.posY + (player.height - 10) < object->Y &&
-            player.posY + (player.height + player.feetBoxOffset) > object->Y) {
-            return true;
-        }
-
+    if (player.posX - 1 < object->X + object->W &&
+        player.posX + player.width + 1 > object->X &&
+        player.posY + (player.height - object->H) < object->Y &&
+        player.posY + (player.height + player.feetBoxOffset) > object->Y) {
+        return true;
+    }
     return false;
 }
 

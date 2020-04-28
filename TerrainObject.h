@@ -5,13 +5,13 @@
 
 class TerrainObject {
 public:
-	TerrainObject(int posX, int posY, int width, int blockHeight);
-	~TerrainObject();
+	TerrainObject() { SDL_Log("Terrain Object Created"); }
+	~TerrainObject() { SDL_Log("Terrain Object Destroyed"); };
 
-	void InitBlock(int x, int y, int w, int h);
+	virtual void InitBlock(int x, int y, int w, int h) = 0;
 
-	void Update();
-	void Render(SDL_Renderer* aRenderer);
+	virtual void Update() = 0;
+	virtual void Render(SDL_Renderer* aRenderer) = 0;
 
 	int X;
 	int Y;
