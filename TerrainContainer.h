@@ -12,6 +12,8 @@ public:
 	TerrainContainer();
 	~TerrainContainer();
 
+	void BuildLevel();
+
 	void AddPlatform(int posX, int posY, int width, int height);
 	void AddPillar(int posX, int posY, int width, int height);
 

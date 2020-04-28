@@ -10,7 +10,9 @@ void InputHandler::HandleInput(bool& done, GameActor& player) {
     //reset acceleration every tick
     player.acceleration = 0;
 
-    if (keystate[SDL_SCANCODE_X]) player.Jump();
+    if (keystate[SDL_SCANCODE_X]) player.stateMachine.IS_JUMPING = true;
+    else player.stateMachine.IS_JUMPING = false;
+
     if (keystate[SDL_SCANCODE_Z]) player.Attack();
 
     //handle movement, deal with deceleration where necessary

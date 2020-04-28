@@ -8,15 +8,15 @@ Player::Player() {
 	velocity.Y = 0;
 
 	//initialise the sprite
-	basicSprite.h = height;
-	basicSprite.w = width;
+	playerHitbox.h = height;
+	playerHitbox.w = width;
 
 	//set up other attributes
 	health = 100;
 	maxSpeed = 10;
 	maxFallSpeed = 15;
 	acceleration = 0;
-	jumpStrength = 20;
+	jumpStrength = 15;
 	attackStrength = 0;
 	weight = 1;
 
@@ -30,9 +30,23 @@ void Player::Update() {
 	//apply a constant downwards force
 	velocity.Y += weight;
 
-	//increment cooldown
-	if(stateMachine.IS_GROUNDED)
+	//check for jump
+	if (stateMachine.IS_JUMPING) {
+		Jump();
+	}
+
+	//increment cooldown, reset variable jump
+	if (stateMachine.IS_GROUNDED) {
+		jumpTicks = 5;
 		jumpCooldown++;
+	}
+	else if (stateMachine.IS_JUMPING && jumpTicks > 0) {
+		//if jumping still held, and ticks remain, boost upward velocity
+		velocity.Y -= 1;
+		jumpTicks--;
+	}
+	else
+		jumpTicks = 0;
 
 	//cooldown reset
 	if (jumpCooldown >= 5)
@@ -42,12 +56,11 @@ void Player::Update() {
 	if (velocity.Y + weight > maxFallSpeed)
 		velocity.Y = maxFallSpeed;
 
-	//idle check
+	//idle check for animations
 	if (velocity.X != 0 || velocity.Y != 0)
 		stateMachine.IS_IDLE = false;
-	else {
+	else 
 		stateMachine.IS_IDLE = true;
-	}
 
 	//cap at maximum speed
 	if (velocity.X > maxSpeed)
@@ -61,20 +74,19 @@ void Player::Update() {
 	posY += velocity.Y;
 
 	//update basic sprite position
-	basicSprite.x = posX;
-	basicSprite.y = posY;
+	playerHitbox.x = posX;
+	playerHitbox.y = posY;
 }
 
 void Player::Render(SDL_Renderer* aRenderer) {
 	//sprite stuff here
 	SDL_SetRenderDrawColor(aRenderer, 255, 255, 255, 255);
-	SDL_RenderDrawRect(aRenderer, &basicSprite);
+	SDL_RenderDrawRect(aRenderer, &playerHitbox);
 }
 
 //overridden commands
 void Player::Jump() { //make variable
 	if (stateMachine.IS_GROUNDED && stateMachine.CAN_JUMP) {
-		stateMachine.IS_JUMPING = true;
 		stateMachine.CAN_JUMP = false;
 		velocity.Y -= jumpStrength;
 		jumpCooldown = 0;
@@ -110,9 +122,9 @@ void Player::MoveUpOnCollision(int yValueOfTerrain) {
 
 void Player::MoveSidewaysOnCollision(int xValueOfTerrain, int widthOfTerrain) {
 	if (posX <= xValueOfTerrain)
-		posX = xValueOfTerrain - width;
+		posX = (xValueOfTerrain - width);
 	else
-		posX = xValueOfTerrain + widthOfTerrain;
+		posX = (xValueOfTerrain + widthOfTerrain);
 
 	velocity.X = 0;
 }

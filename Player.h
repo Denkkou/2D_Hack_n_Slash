@@ -19,8 +19,9 @@ public:
 	int width = 48;
 	int height = 64;
 	int feetBoxOffset = 10;
+	int jumpTicks;
 
-	SDL_Rect basicSprite;
+	SDL_Rect playerHitbox;
 
 	virtual void MoveUpOnCollision(int yValueOfTerrain);
 	virtual void MoveSidewaysOnCollision(int xValueOfTerrain, int widthOfTerrain);

@@ -7,7 +7,6 @@ public:
 
 	bool CAN_JUMP;
 	bool IS_JUMPING;
-	//player is falling if not jumping and not grounded
 
 	bool IS_IDLE;
 

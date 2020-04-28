@@ -57,10 +57,10 @@ void GameWorld::Update() {
 
     //detect for collision of pillar terrain
     for (int i = 0; i < terrainContainer.aListOfPillarObjects.size(); i++) {
+        //if colliding from the sides
         if (detectedCollision(player, terrainContainer.aListOfPillarObjects[i])) {
             //reposition player, cancel their velocity
             player.MoveSidewaysOnCollision(terrainContainer.aListOfPillarObjects[i]->X, terrainContainer.aListOfPillarObjects[i]->W);
-            player.MoveUpOnCollision(terrainContainer.aListOfPillarObjects[i]->Y);
         }
     }
 }
@@ -80,8 +80,8 @@ void GameWorld::Render() {
 
 bool GameWorld::detectedCollision(Player &player, TerrainObject* object) {
     //detect collision
-    if (player.posX - 1 < object->X + object->W &&
-        player.posX + player.width + 1 > object->X &&
+    if (player.posX  < object->X + object->W &&
+        player.posX + player.width > object->X &&
         player.posY + (player.height - object->H) < object->Y &&
         player.posY + (player.height + player.feetBoxOffset) > object->Y) {
         return true;
