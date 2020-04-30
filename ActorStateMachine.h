@@ -9,8 +9,11 @@ public:
 	bool IS_JUMPING;
 
 	bool IS_IDLE;
+	bool IS_FACING_RIGHT;
+	bool IS_FACING_LEFT;
+	bool IS_AIMING_UP;
+	bool IS_AIMING_DOWN;
 
-	bool IS_ATTEMPTING_ATTACK;
 	bool IS_ATTACKING;
 };
 

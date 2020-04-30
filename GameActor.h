@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include <SDL.h>
+#include <vector>
 #include "Vector2D.h"
 #include "ActorStateMachine.h"
+#include "AttackHitbox.h"
 
 class GameActor {
 public:
@@ -17,12 +19,14 @@ public:
 	virtual void MoveRight() = 0;
 
 	virtual void Update() = 0;
+	virtual void UpdateHitboxPositions() = 0;
 	virtual void Render(SDL_Renderer* aRenderer) = 0;
 
 	virtual void MoveUpOnCollision(int yValueOfTerrain) = 0;
 	virtual void MoveSidewaysOnCollision(int xValueOfTerrain, int widthOfTerrain) = 0;
 
 	ActorStateMachine stateMachine;
+	std::vector<AttackHitbox*> attackHitboxes;
 
 	int health;
 	int maxSpeed;
@@ -31,8 +35,15 @@ public:
 	int attackStrength;
 	int weight;
 	int maxFallSpeed;
+	int attackRange;
 
 	int jumpCooldown;
+	int attackCooldown;
+	int attackDuration;
+
+	enum aimDirections {UP, DOWN, LEFT, RIGHT};
+	virtual int CalculateDirection() = 0;
+	int lastFacing;
 
 	int posX;
 	int posY;
