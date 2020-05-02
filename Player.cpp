@@ -50,7 +50,11 @@ Player::~Player() {
 	SDL_Log("Player destroyed"); 
 }
 
-void Player::Update() {
+void Player::Update(GetTime& timeGetter) {
+	//get a timestamp
+	char timestr[32];
+	timeGetter.getTime(timestr, 32);
+
 	//apply a constant downwards force
 	velocity.Y += weight;
 
@@ -59,6 +63,7 @@ void Player::Update() {
 	if (stateMachine.IS_ATTACKING && attackCooldown >= 20 && !startAttackDuration) {
 		startAttackDuration = true;
 		direction = CalculateDirection();
+		SDL_Log("[%s] [ACTION]   | Player Initiated Attack; Direction %i", timestr, direction);
 	}
 
 	if (startAttackDuration) {
@@ -70,6 +75,9 @@ void Player::Update() {
 			ticksSinceAttackStart = 0;
 			startAttackDuration = false;
 			attackCooldown = 0;
+
+			//log attack end
+			SDL_Log("[%s] [ACTION]   | Player Finished Attack; Direction %i", timestr, direction);
 		}
 	}
 	else {
@@ -87,7 +95,7 @@ void Player::Update() {
 
 	//------------------------------------------------------------------------- JUMPING PHYSICS
 	//check for jump
-	if (stateMachine.IS_JUMPING)
+	if (stateMachine.IS_JUMPING) 
 		Jump();
 
 	//increment jumping cooldown, reset variable jump
@@ -138,30 +146,26 @@ void Player::Update() {
 	playerHitbox.y = posY;
 }
 
-//this is very verbose and clunky, find an iterative approach
 void Player::UpdateHitboxPositions() {
-	//too verbose? is an iterative approach possible?
-	attackHitboxes[0]->atk_posX = posX;
-	attackHitboxes[0]->atk_posY = posY - attackRange;
+	//move hitboxes with appropriate offsets
+	attackHitboxes[UP]->atk_posX = posX;
+	attackHitboxes[UP]->atk_posY = posY - attackRange;
+	attackHitboxes[DOWN]->atk_posX = posX;
+	attackHitboxes[DOWN]->atk_posY = posY + height;
+	attackHitboxes[LEFT]->atk_posX = posX - attackRange;
+	attackHitboxes[LEFT]->atk_posY = posY;
+	attackHitboxes[RIGHT]->atk_posX = posX + width;
+	attackHitboxes[RIGHT]->atk_posY = posY;
 
-	attackHitboxes[1]->atk_posX = posX;
-	attackHitboxes[1]->atk_posY = posY + height;
-
-	attackHitboxes[2]->atk_posX = posX - attackRange;
-	attackHitboxes[2]->atk_posY = posY;
-
-	attackHitboxes[3]->atk_posX = posX + width;
-	attackHitboxes[3]->atk_posY = posY;
-
-	//debug rendering, clunky, I know...
-	attackHitboxes[0]->hitBox.x = posX;
-	attackHitboxes[0]->hitBox.y = posY - attackRange;
-	attackHitboxes[1]->hitBox.x = posX;
-	attackHitboxes[1]->hitBox.y = posY + height;
-	attackHitboxes[2]->hitBox.x = posX - attackRange;
-	attackHitboxes[2]->hitBox.y = posY;
-	attackHitboxes[3]->hitBox.x = posX + width;
-	attackHitboxes[3]->hitBox.y = posY;
+	//clunky debug rendering
+	attackHitboxes[UP]->hitBox.x = posX;
+	attackHitboxes[UP]->hitBox.y = posY - attackRange;
+	attackHitboxes[DOWN]->hitBox.x = posX;
+	attackHitboxes[DOWN]->hitBox.y = posY + height;
+	attackHitboxes[LEFT]->hitBox.x = posX - attackRange;
+	attackHitboxes[LEFT]->hitBox.y = posY;
+	attackHitboxes[RIGHT]->hitBox.x = posX + width;
+	attackHitboxes[RIGHT]->hitBox.y = posY;
 }
 
 void Player::Render(SDL_Renderer* aRenderer) {
@@ -184,8 +188,6 @@ void Player::Jump() { //make variable
 		velocity.Y -= jumpStrength;
 		jumpCooldown = 0;
 	}
-
-	SDL_Log("Player Jump");
 }
 
 void Player::Attack() {
@@ -195,8 +197,6 @@ void Player::Attack() {
 	}
 
 	attackHitboxes[direction]->atk_active = true;
-
-	SDL_Log("Player Attack");
 }
 
 int Player::CalculateDirection() {
@@ -217,7 +217,7 @@ void Player::MoveLeft() {
 
 	lastFacing = LEFT;
 	acceleration = (-1);
-	SDL_Log("Player Facing: %d", stateMachine.IS_FACING_RIGHT);
+	//SDL_Log("Player Facing: %d", stateMachine.IS_FACING_RIGHT);
 }
 
 void Player::MoveRight() {
@@ -228,7 +228,7 @@ void Player::MoveRight() {
 
 	lastFacing = RIGHT;
 	acceleration = 1;
-	SDL_Log("Player Facing: %d", stateMachine.IS_FACING_RIGHT);
+	//SDL_Log("Player Facing: %d", stateMachine.IS_FACING_RIGHT);
 }
 
 //collision response

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="GameWorld.cpp" />
+    <ClCompile Include="GetTime.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Pillar.cpp" />
     <ClCompile Include="Platform.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="GameActor.h" />
     <ClInclude Include="GameWorld.h" />
+    <ClInclude Include="GetTime.h" />
     <ClInclude Include="InputHander.h" />
     <ClInclude Include="Pillar.h" />
     <ClInclude Include="Platform.h" />

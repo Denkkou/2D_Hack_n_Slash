@@ -1,8 +1,22 @@
 #include "InputHander.h"
 
 //needs SDL quit code and a way of handling escape
-void InputHandler::HandleInput(bool& done, GameActor& player) {
+void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGetter) {
+    //event polling
     while (SDL_PollEvent(&_event)) {
+        //timestamp
+        SDL_Keycode keyPressed = _event.key.keysym.sym;
+        char timestr[32];
+        timeGetter.getTime(timestr, 32);
+
+        //log a key down
+        if (_event.type == SDL_KEYDOWN && !_event.key.repeat)
+            SDL_Log("[%s] [KEY DOWN] | time %d;  char %s;", timestr, _event.key.timestamp, SDL_GetKeyName(keyPressed));
+
+        //log a key up
+        if (_event.type == SDL_KEYUP && !_event.key.repeat)
+            SDL_Log("[%s] [KEY UP]   | time %d; char %s;", timestr, _event.key.timestamp, SDL_GetKeyName(keyPressed));
+
         if (_event.type == SDL_QUIT)
             done = true;
     }
@@ -10,10 +24,12 @@ void InputHandler::HandleInput(bool& done, GameActor& player) {
     //reset acceleration every tick
     player.acceleration = 0;
 
-    if (keystate[SDL_SCANCODE_X]) player.stateMachine.IS_JUMPING = true;
+    //jump
+    if (keystate[SDL_SCANCODE_X]) { player.stateMachine.IS_JUMPING = true; }
     else player.stateMachine.IS_JUMPING = false;
 
-    if (keystate[SDL_SCANCODE_Z]) player.stateMachine.IS_ATTACKING = true;
+    //attack
+    if (keystate[SDL_SCANCODE_Z]) { player.stateMachine.IS_ATTACKING = true; }
     else player.stateMachine.IS_ATTACKING = false;
 
     //handle movement, deal with deceleration where necessary

@@ -7,6 +7,7 @@
 #include "Vector2D.h"
 #include "ActorStateMachine.h"
 #include "AttackHitbox.h"
+#include "GetTime.h"
 
 class GameActor {
 public:
@@ -18,7 +19,7 @@ public:
 	virtual void MoveLeft() = 0;
 	virtual void MoveRight() = 0;
 
-	virtual void Update() = 0;
+	virtual void Update(GetTime& timeGetter) = 0;
 	virtual void UpdateHitboxPositions() = 0;
 	virtual void Render(SDL_Renderer* aRenderer) = 0;
 

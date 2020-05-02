@@ -10,7 +10,7 @@ GameWorld::~GameWorld() {
 
 void GameWorld::Init() {
     //create window and renderer
-    window = SDL_CreateWindow("SCH18683720 - Game Project", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, 0);
+    window = SDL_CreateWindow("[Joe Schofield - SCH18683720] CGP2015M - 2D Hack 'n' Slash", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     //log initialisation
@@ -24,7 +24,7 @@ void GameWorld::Run() {
         timer.resetTicks();
 
         //receive input and handle
-        inputHandler.HandleInput(done, player);   
+        inputHandler.HandleInput(done, player, timeGetter);   
        
         //update state of the game world
         Update();
@@ -42,7 +42,7 @@ void GameWorld::Run() {
 void GameWorld::Update() {
     //call the update function of all containers
     terrainContainer.Update();
-    player.Update();
+    player.Update(timeGetter);
 
     //reset grounding
     player.stateMachine.IS_GROUNDED = false;

@@ -13,7 +13,7 @@ public:
 	virtual void MoveLeft();
 	virtual void MoveRight();
 
-	virtual void Update();
+	virtual void Update(GetTime& timeGetter);
 	virtual void UpdateHitboxPositions();
 	virtual void Render(SDL_Renderer* aRenderer);
 

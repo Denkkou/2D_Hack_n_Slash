@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "FrameTimer.h"
 #include "TerrainContainer.h"
+#include "GetTime.h"
 
 class GameWorld {
 public:
@@ -20,6 +21,7 @@ public:
 	InputHandler inputHandler;
 	TerrainContainer terrainContainer;
 	Player player;
+	GetTime timeGetter;
 
 	void Init();
 	void Run();
