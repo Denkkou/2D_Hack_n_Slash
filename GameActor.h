@@ -38,6 +38,8 @@ public:
 	int maxFallSpeed;
 	int attackRange;
 
+	int animationState;
+
 	int jumpCooldown;
 	int attackCooldown;
 	int attackDuration;

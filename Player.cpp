@@ -11,8 +11,10 @@ Player::Player() {
 	playerHitbox.h = height;
 	playerHitbox.w = width;
 
+	playerSprite.Init(posX, posY, 64, 64);
+
 	//default facing
-	stateMachine.IS_FACING_LEFT = true;
+	stateMachine.IS_FACING_LEFT = false;
 
 	//set up other attributes
 	health = 100;
@@ -58,6 +60,9 @@ void Player::Update(GetTime& timeGetter) {
 	//apply a constant downwards force
 	velocity.Y += weight;
 
+	//update sprite location
+	playerSprite.Update(SDL_GetTicks(), posX, posY, animationState, lastFacing);
+
 	//------------------------------------------------------------------------- ATTACKING
 	//check for attack, start duration
 	if (stateMachine.IS_ATTACKING && attackCooldown >= 20 && !startAttackDuration) {
@@ -69,13 +74,14 @@ void Player::Update(GetTime& timeGetter) {
 	if (startAttackDuration) {
 		ticksSinceAttackStart++;
 
-		if (ticksSinceAttackStart <= attackDuration)
+		if (ticksSinceAttackStart <= attackDuration) {
 			Attack();
+		}
 		else {
 			ticksSinceAttackStart = 0;
 			startAttackDuration = false;
 			attackCooldown = 0;
-
+			animationState = idle;
 			//log attack end
 			SDL_Log("[%s] [ACTION]   | Player Finished Attack; Direction %i", timestr, direction);
 		}
@@ -95,13 +101,17 @@ void Player::Update(GetTime& timeGetter) {
 
 	//------------------------------------------------------------------------- JUMPING PHYSICS
 	//check for jump
-	if (stateMachine.IS_JUMPING) 
+	if (stateMachine.IS_JUMPING) {
 		Jump();
+	}
 
 	//increment jumping cooldown, reset variable jump
 	if (stateMachine.IS_GROUNDED) {
 		jumpTicks = 5;
 		jumpCooldown++;
+		if (!stateMachine.IS_ATTACKING)
+			animationState = idle;
+		animationState = idle;
 	}
 	else if (stateMachine.IS_JUMPING && jumpTicks > 0) {
 		//if still held & ticks remain, boost upward velocity
@@ -120,11 +130,13 @@ void Player::Update(GetTime& timeGetter) {
 	if (velocity.Y + weight > maxFallSpeed)
 		velocity.Y = maxFallSpeed;
 
-	//idle check for animations
-	if (velocity.X != 0 || velocity.Y != 0)
-		stateMachine.IS_IDLE = false;
-	else 
-		stateMachine.IS_IDLE = true;
+	////idle check for animations
+	//if (velocity.X == 0 && velocity.Y == 0 && !stateMachine.IS_ATTACKING) {
+	//	stateMachine.IS_IDLE = true;
+	//	animationState = idle;
+	//}
+	//else
+	//	stateMachine.IS_IDLE = false;
 
 	//cap at maximum speed
 	if (velocity.X > maxSpeed)
@@ -152,9 +164,9 @@ void Player::UpdateHitboxPositions() {
 	attackHitboxes[UP]->atk_posY = posY - attackRange;
 	attackHitboxes[DOWN]->atk_posX = posX;
 	attackHitboxes[DOWN]->atk_posY = posY + height;
-	attackHitboxes[LEFT]->atk_posX = posX - attackRange;
+	attackHitboxes[LEFT]->atk_posX = posX - attackRange + 32;
 	attackHitboxes[LEFT]->atk_posY = posY;
-	attackHitboxes[RIGHT]->atk_posX = posX + width;
+	attackHitboxes[RIGHT]->atk_posX = posX + width - 32;
 	attackHitboxes[RIGHT]->atk_posY = posY;
 
 	//clunky debug rendering
@@ -162,22 +174,26 @@ void Player::UpdateHitboxPositions() {
 	attackHitboxes[UP]->hitBox.y = posY - attackRange;
 	attackHitboxes[DOWN]->hitBox.x = posX;
 	attackHitboxes[DOWN]->hitBox.y = posY + height;
-	attackHitboxes[LEFT]->hitBox.x = posX - attackRange;
+	attackHitboxes[LEFT]->hitBox.x = posX - attackRange + 32;
 	attackHitboxes[LEFT]->hitBox.y = posY;
-	attackHitboxes[RIGHT]->hitBox.x = posX + width;
+	attackHitboxes[RIGHT]->hitBox.x = posX + width - 32;
 	attackHitboxes[RIGHT]->hitBox.y = posY;
 }
 
 void Player::Render(SDL_Renderer* aRenderer) {
 	//sprite stuff here
-	SDL_SetRenderDrawColor(aRenderer, 255, 255, 255, 255);
-	SDL_RenderFillRect(aRenderer, &playerHitbox);
+	//SDL_SetRenderDrawColor(aRenderer, 255, 255, 255, 255);
+	//SDL_RenderFillRect(aRenderer, &playerHitbox);
+
+	playerSprite.Render(aRenderer);
 
 	//debug rendering of hitboxes
-	for (auto& element : attackHitboxes) {
-		if (element->atk_active) SDL_SetRenderDrawColor(aRenderer, 255, 0, 0, 255);
-		else SDL_SetRenderDrawColor(aRenderer, 0, 255, 0, 255);
-		SDL_RenderDrawRect(aRenderer, &element->hitBox);
+	if (DEBUG) {
+		for (auto& element : attackHitboxes) {
+			if (element->atk_active) SDL_SetRenderDrawColor(aRenderer, 255, 0, 0, 255);
+			else SDL_SetRenderDrawColor(aRenderer, 0, 255, 0, 255);
+			SDL_RenderDrawRect(aRenderer, &element->hitBox);
+		}
 	}
 }
 
@@ -195,7 +211,6 @@ void Player::Attack() {
 	for (auto& element : attackHitboxes) {
 		element->atk_active = false;
 	}
-
 	attackHitboxes[direction]->atk_active = true;
 }
 
@@ -216,6 +231,8 @@ void Player::MoveLeft() {
 	stateMachine.IS_AIMING_DOWN = false;
 
 	lastFacing = LEFT;
+	if(!stateMachine.IS_ATTACKING)
+		animationState = walkLeft;
 	acceleration = (-1);
 	//SDL_Log("Player Facing: %d", stateMachine.IS_FACING_RIGHT);
 }
@@ -227,6 +244,8 @@ void Player::MoveRight() {
 	stateMachine.IS_AIMING_DOWN = false;
 
 	lastFacing = RIGHT;
+	if (!stateMachine.IS_ATTACKING)
+		animationState = walkRight;
 	acceleration = 1;
 	//SDL_Log("Player Facing: %d", stateMachine.IS_FACING_RIGHT);
 }

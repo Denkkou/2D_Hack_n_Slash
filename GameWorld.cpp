@@ -13,6 +13,8 @@ void GameWorld::Init() {
     window = SDL_CreateWindow("[Joe Schofield - SCH18683720] CGP2015M - 2D Hack 'n' Slash", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+    player.playerSprite.Load(renderer, "content/sprites/player_sheet.png", false);
+
     //log initialisation
     SDL_Log("Game World initialised");
 }

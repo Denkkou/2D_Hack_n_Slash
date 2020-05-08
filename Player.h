@@ -2,11 +2,14 @@
 #define aPlayerCharacterFile
 
 #include "GameActor.h"
+#include "Sprite.h"
 
 class Player : public GameActor {
 public:
 	Player();
 	~Player();
+
+	enum playerStates {walkLeft, walkRight, idle, jump, attack};
 
 	virtual void Jump();
 	virtual void Attack();
@@ -17,7 +20,7 @@ public:
 	virtual void UpdateHitboxPositions();
 	virtual void Render(SDL_Renderer* aRenderer);
 
-	int width = 48;
+	int width = 64;
 	int height = 64;
 	int feetBoxOffset = 10;
 	int jumpTicks;
@@ -26,7 +29,10 @@ public:
 	int ticksSinceAttackStart = 0;
 	bool startAttackDuration;
 
+	Sprite playerSprite;
 	SDL_Rect playerHitbox;
+
+	bool DEBUG = false;
 
 	virtual int CalculateDirection();
 

@@ -25,11 +25,11 @@ void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGette
     player.acceleration = 0;
 
     //jump
-    if (keystate[SDL_SCANCODE_X]) { player.stateMachine.IS_JUMPING = true; }
+    if (keystate[SDL_SCANCODE_X]) { player.stateMachine.IS_JUMPING = true; player.animationState = 3;}
     else player.stateMachine.IS_JUMPING = false;
 
     //attack
-    if (keystate[SDL_SCANCODE_Z]) { player.stateMachine.IS_ATTACKING = true; }
+    if (keystate[SDL_SCANCODE_Z]) { player.stateMachine.IS_ATTACKING = true; player.animationState = 4;}
     else player.stateMachine.IS_ATTACKING = false;
 
     //handle movement, deal with deceleration where necessary
