@@ -24,7 +24,7 @@ void Pillar::InitBlock(int x, int y, int w, int h) {
 void Pillar::Update() {}
 
 void Pillar::Render(SDL_Renderer* aRenderer) {
-	SDL_SetRenderDrawColor(aRenderer, 0, 0, 255, 255);
+	SDL_SetRenderDrawColor(aRenderer, 82, 122, 122, 255);
 	SDL_RenderFillRect(aRenderer, &block);
 }
 

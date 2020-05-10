@@ -181,10 +181,7 @@ void Player::UpdateHitboxPositions() {
 }
 
 void Player::Render(SDL_Renderer* aRenderer) {
-	//sprite stuff here
-	//SDL_SetRenderDrawColor(aRenderer, 255, 255, 255, 255);
-	//SDL_RenderFillRect(aRenderer, &playerHitbox);
-
+	//sprite stuff
 	playerSprite.Render(aRenderer);
 
 	//debug rendering of hitboxes

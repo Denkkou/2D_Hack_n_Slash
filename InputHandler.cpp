@@ -1,7 +1,7 @@
 #include "InputHander.h"
 
 //needs SDL quit code and a way of handling escape
-void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGetter) {
+void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGetter, SDL_Window* window) {
     //event polling
     while (SDL_PollEvent(&_event)) {
         //timestamp
@@ -11,14 +11,27 @@ void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGette
 
         //log a key down
         if (_event.type == SDL_KEYDOWN && !_event.key.repeat)
-            SDL_Log("[%s] [KEY DOWN] | time %d;  char %s;", timestr, _event.key.timestamp, SDL_GetKeyName(keyPressed));
+            SDL_Log("[%s] [KEY DOWN] | time %d;  char %s; (InputHandler.cpp)", timestr, _event.key.timestamp, SDL_GetKeyName(keyPressed));
 
         //log a key up
         if (_event.type == SDL_KEYUP && !_event.key.repeat)
-            SDL_Log("[%s] [KEY UP]   | time %d; char %s;", timestr, _event.key.timestamp, SDL_GetKeyName(keyPressed));
+            SDL_Log("[%s] [KEY UP]   | time %d; char %s; (InputHandler.cpp)", timestr, _event.key.timestamp, SDL_GetKeyName(keyPressed));
 
         if (_event.type == SDL_QUIT)
             done = true;
+    }
+
+    //borderless fullscreen window
+    if (!windowBorderless && keystate[SDL_SCANCODE_B]) {
+        SDL_SetWindowBordered(window, SDL_FALSE);
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+        windowBorderless = true;
+    }
+
+    if (windowBorderless && keystate[SDL_SCANCODE_N]) {
+        SDL_SetWindowFullscreen(window, 0);
+        SDL_SetWindowBordered(window, SDL_TRUE);
+        windowBorderless = false;
     }
 
     //reset acceleration every tick

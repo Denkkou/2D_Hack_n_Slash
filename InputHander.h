@@ -16,10 +16,11 @@ class Command;
 class InputHandler {
 public:
 	//pass it a reference to the loop control, player, and time getter
-	void HandleInput(bool& done, GameActor& player, GetTime& timeGetter);
+	void HandleInput(bool& done, GameActor& player, GetTime& timeGetter, SDL_Window* window);
 	SDL_Event _event;
 private:
 	const Uint8* keystate = SDL_GetKeyboardState(NULL);
+	bool windowBorderless = false;
 };
 
 #endif

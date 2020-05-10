@@ -14,6 +14,7 @@ void GameWorld::Init() {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     player.playerSprite.Load(renderer, "content/sprites/player_sheet.png", false);
+    SDL_Log("Player sprite loaded");
 
     //log initialisation
     SDL_Log("Game World initialised");
@@ -26,7 +27,7 @@ void GameWorld::Run() {
         timer.resetTicks();
 
         //receive input and handle
-        inputHandler.HandleInput(done, player, timeGetter);   
+        inputHandler.HandleInput(done, player, timeGetter, window);   
        
         //update state of the game world
         Update();
@@ -37,7 +38,6 @@ void GameWorld::Run() {
         //delay for rest of frame
         if (timer.getTicks() < DELTA_TIME)
             SDL_Delay(DELTA_TIME - timer.getTicks());
-
     }
 }
 

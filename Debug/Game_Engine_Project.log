@@ -1,9 +1,2 @@
-﻿  GameWorld.cpp
-D:\Documents\GitHub\Game_Engine_Project\GameWorld.cpp(53,23): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\Game_Engine_Project\GameWorld.cpp(61,23): warning C4018: '<': signed/unsigned mismatch
-  InputHandler.cpp
-D:\Documents\GitHub\Game_Engine_Project\InputHandler.cpp(62,39): warning C4390: ';': empty controlled statement found; is this the intent?
-  Player.cpp
-  Source.cpp
-  Generating Code...
+﻿  TerrainContainer.cpp
   Game_Engine_Project.vcxproj -> D:\Documents\GitHub\Game_Engine_Project\Debug\Game_Engine_Project.exe

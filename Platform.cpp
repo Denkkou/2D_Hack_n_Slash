@@ -24,7 +24,7 @@ void Platform::InitBlock(int x, int y, int w, int h) {
 void Platform::Update() {}
 
 void Platform::Render(SDL_Renderer* aRenderer) {
-	SDL_SetRenderDrawColor(aRenderer, 200, 100, 0, 255);
+	SDL_SetRenderDrawColor(aRenderer, 0, 128, 0, 255);
 	SDL_RenderFillRect(aRenderer, &block);
 }
 
