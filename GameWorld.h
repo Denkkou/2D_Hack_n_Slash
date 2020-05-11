@@ -10,6 +10,7 @@
 #include "FrameTimer.h"
 #include "TerrainContainer.h"
 #include "GetTime.h"
+#include "Sprite.h"
 
 class GameWorld {
 public:
@@ -27,6 +28,9 @@ public:
 	void Init();
 	void Run();
 
+	void SplashScreen();
+	void GameOverScreen();
+
 	void Update();
 	void Render();
 
@@ -35,6 +39,10 @@ private:
 	FrameTimer timer;
 	const int DELTA_TIME = 16;
 	bool done = false;
+
+	//graphic sprites
+	Sprite GameBackgroundSprite;
+	Sprite SplashGraphicSprite;
 
 	//music and sfx
 	Mix_Music* backgroundMusic = NULL;
@@ -45,7 +53,7 @@ private:
 
 	unsigned int lastTime = 0;
 	unsigned int currentTime;
-	int countdownTimer = 30;
+	int countdownTimer;
 
 	bool detectedCollision(Player &player, TerrainObject* object);
 };

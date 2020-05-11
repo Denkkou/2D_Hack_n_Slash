@@ -19,8 +19,20 @@ void GameWorld::Init() {
     window = SDL_CreateWindow("[Joe Schofield - SCH18683720] CGP2015M - 2D Hack 'n' Slash", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+    //initialise player sprite
     player.playerSprite.Load(renderer, "./content/sprites/player_sheet.png", false);
     SDL_Log("GameWorld.cpp        | Player sprite loaded");
+
+    //initialise splash sprite
+    SplashGraphicSprite.Init(10, 10, 1580, 880);
+    SplashGraphicSprite.Load(renderer, "./content/sprites/splashScreen.png", false);
+
+    //initialise background sprite
+    GameBackgroundSprite.Init(0, 0, 1600, 900);
+    GameBackgroundSprite.Load(renderer, "./content/sprites/background.png", false);
+
+    //initialise for splash
+    countdownTimer = 10;
 
     //initialise music and sfx files
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
@@ -40,16 +52,18 @@ void GameWorld::Init() {
         Mix_PlayMusic(backgroundMusic, -1);
     else
         Mix_HaltMusic();
-
-
+    
     //log initialisation
     SDL_Log("GameWorld.cpp        | Game World initialised");
 }
 
 //implement a timer sync function
 void GameWorld::Run() {
-    //splash screen loop
+    //splash screen
+    SplashScreen();
 
+    //reset timer
+    countdownTimer = 30;
 
     //core game loop
     while (!done) {
@@ -73,18 +87,63 @@ void GameWorld::Run() {
         //push changes to renderer
         Render();
 
+        //delay for rest of frame
+        if (timer.getTicks() < DELTA_TIME)
+            SDL_Delay(DELTA_TIME - timer.getTicks());
+
         //game over check
-        if (countdownTimer <= 0)
+        if (countdownTimer <= 0) {
             done = true;
+            GameOverScreen();
+        }
+    }
+}
+
+//initial splash screen, 10 second countdown
+void GameWorld::SplashScreen() {
+    bool splashDone = false;
+
+    while (!splashDone) {
+        //reset timer, begin counting
+        timer.resetTicks();
+
+        //countdown timer code
+        currentTime = SDL_GetTicks();
+        if (currentTime > lastTime + 1000) {
+            lastTime = currentTime;
+            SDL_Log("Splash Timer: %i", countdownTimer);
+            countdownTimer--;
+        }
+
+        //draw something on screen
+        SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        //render graphic
+        SplashGraphicSprite.Render(renderer);
+
+        //render screen text
+
+
+        //push changes
+        SDL_RenderPresent(renderer);
 
         //delay for rest of frame
         if (timer.getTicks() < DELTA_TIME)
             SDL_Delay(DELTA_TIME - timer.getTicks());
-    }
 
-    //game over loop here
-    
+        //check for timeout
+        if (countdownTimer <= 0) {
+            splashDone = true;
+        }
+    }
 }
+
+void GameWorld::GameOverScreen() {
+    SDL_Log("game over screeeeen");
+    //SDL_Delay(10000);
+}
+
 
 void GameWorld::Update() {
     //call the update function of all containers
@@ -120,6 +179,9 @@ void GameWorld::Render() {
     //clear screen with black
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+
+    //draw background
+    GameBackgroundSprite.Render(renderer);
 
     //call the render function of all containers
     terrainContainer.Render(renderer);

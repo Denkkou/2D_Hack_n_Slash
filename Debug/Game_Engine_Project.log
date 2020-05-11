@@ -1,4 +1,6 @@
 ﻿  GameWorld.cpp
-D:\Documents\GitHub\Game_Engine_Project\GameWorld.cpp(102,23): warning C4018: '<': signed/unsigned mismatch
-D:\Documents\GitHub\Game_Engine_Project\GameWorld.cpp(110,23): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\Game_Engine_Project\GameWorld.cpp(161,23): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\Game_Engine_Project\GameWorld.cpp(169,23): warning C4018: '<': signed/unsigned mismatch
+  Source.cpp
+  Generating Code...
   Game_Engine_Project.vcxproj -> D:\Documents\GitHub\Game_Engine_Project\Debug\Game_Engine_Project.exe
