@@ -40,7 +40,7 @@ Player::Player() {
 	this->attackHitboxes.push_back(atk_right);
 
 	//log creation of player
-	SDL_Log("Player created");
+	SDL_Log("GameWorld.h          | Player created");
 }
 
 Player::~Player() { 
@@ -49,7 +49,7 @@ Player::~Player() {
 		delete element;
 	}
 
-	SDL_Log("Player destroyed"); 
+	SDL_Log("GameWorld.h          | Player destroyed"); 
 }
 
 void Player::Update(GetTime& timeGetter) {
@@ -129,14 +129,6 @@ void Player::Update(GetTime& timeGetter) {
 	//cap max fall
 	if (velocity.Y + weight > maxFallSpeed)
 		velocity.Y = maxFallSpeed;
-
-	////idle check for animations
-	//if (velocity.X == 0 && velocity.Y == 0 && !stateMachine.IS_ATTACKING) {
-	//	stateMachine.IS_IDLE = true;
-	//	animationState = idle;
-	//}
-	//else
-	//	stateMachine.IS_IDLE = false;
 
 	//cap at maximum speed
 	if (velocity.X > maxSpeed)

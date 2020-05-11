@@ -1,7 +1,7 @@
 #include "GameWorld.h"
 
 GameWorld::GameWorld() {
-    SDL_Log("GameWorld created");
+    SDL_Log("GameWorld.cpp        | GameWorld created");
 }
 
 GameWorld::~GameWorld() {
@@ -9,9 +9,9 @@ GameWorld::~GameWorld() {
     Mix_FreeMusic(backgroundMusic);
     Mix_FreeChunk(attackSound);
     Mix_CloseAudio();
-    SDL_Log("Audio deallocated");
+    SDL_Log("GameWorld.cpp        | Audio deallocated");
 
-    SDL_Log("GameWorld destroyed");
+    SDL_Log("GameWorld.cpp        | GameWorld destroyed");
 }
 
 void GameWorld::Init() {
@@ -20,7 +20,7 @@ void GameWorld::Init() {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     player.playerSprite.Load(renderer, "./content/sprites/player_sheet.png", false);
-    SDL_Log("Player sprite loaded");
+    SDL_Log("GameWorld.cpp        | Player sprite loaded");
 
     //initialise music and sfx files
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
@@ -43,22 +43,26 @@ void GameWorld::Init() {
 
 
     //log initialisation
-    SDL_Log("Game World initialised");
+    SDL_Log("GameWorld.cpp        | Game World initialised");
 }
 
 //implement a timer sync function
 void GameWorld::Run() {
+    //splash screen loop
+
+
+    //core game loop
     while (!done) {
         //reset timer, begin counting
         timer.resetTicks();
 
-        //if (countdown <= 0)
-            //done = true;
-            //game over stuff
-
-        //update volume values
-        Mix_VolumeMusic(musicVolume);
-        //Mix_VolumeChunk(attackSound, sfxVolume);
+        //countdown timer code
+        currentTime = SDL_GetTicks();
+        if (currentTime > lastTime + 1000) {
+            lastTime = currentTime;
+            SDL_Log("Timer: %i", countdownTimer);
+            countdownTimer--;
+        }
 
         //receive input and handle
         inputHandler.HandleInput(done, player, timeGetter, window, musicVolume, sfxVolume);   
@@ -69,16 +73,27 @@ void GameWorld::Run() {
         //push changes to renderer
         Render();
 
+        //game over check
+        if (countdownTimer <= 0)
+            done = true;
+
         //delay for rest of frame
         if (timer.getTicks() < DELTA_TIME)
             SDL_Delay(DELTA_TIME - timer.getTicks());
     }
+
+    //game over loop here
+    
 }
 
 void GameWorld::Update() {
     //call the update function of all containers
     terrainContainer.Update();
     player.Update(timeGetter);
+
+    //update volume values
+    Mix_VolumeMusic(musicVolume);
+    //Mix_VolumeChunk(attackSound, sfxVolume);
 
     //reset grounding
     player.stateMachine.IS_GROUNDED = false;

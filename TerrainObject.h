@@ -5,8 +5,8 @@
 
 class TerrainObject {
 public:
-	TerrainObject() { SDL_Log("Terrain Object Created"); }
-	~TerrainObject() { SDL_Log("Terrain Object Destroyed"); };
+	TerrainObject() {}
+	~TerrainObject() {};
 
 	virtual void InitBlock(int x, int y, int w, int h) = 0;
 

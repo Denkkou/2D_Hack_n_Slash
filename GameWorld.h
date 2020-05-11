@@ -43,6 +43,10 @@ private:
 	int sfxVolume = 128;
 	int musicVolume = 32;
 
+	unsigned int lastTime = 0;
+	unsigned int currentTime;
+	int countdownTimer = 30;
+
 	bool detectedCollision(Player &player, TerrainObject* object);
 };
 

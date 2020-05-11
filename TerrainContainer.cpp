@@ -8,7 +8,7 @@ NOTE ABOUT PILLARS:
 */
 
 TerrainContainer::TerrainContainer() {
-    SDL_Log("Terrain Container Created");
+    SDL_Log("GameWorld.h          | Terrain Container Created");
     BuildLevel();
 }
 
@@ -22,7 +22,7 @@ TerrainContainer::~TerrainContainer() {
         delete element;
     }
 
-    SDL_Log("Terrain Container Destroyed");
+    SDL_Log("GameWorld.h          | Terrain Container Destroyed");
 }
 
 //create the level pieces in here (tunnelling occurs <10 width)
@@ -52,7 +52,7 @@ void TerrainContainer::BuildLevel() {
     //right platform
     AddPlatform(1200, 500, 300, 30);
 
-    SDL_Log("Level constructed");
+    SDL_Log("TerrainContainer.cpp | Level constructed");
 }
 
 //create a platform the player can jump up through

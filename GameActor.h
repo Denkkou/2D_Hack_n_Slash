@@ -11,8 +11,8 @@
 
 class GameActor {
 public:
-	GameActor() { SDL_Log("Game actor created"); }
-	~GameActor() { SDL_Log("Game actor destroyed"); }
+	GameActor() { SDL_Log("GameWorld.h          | Game actor created"); }
+	~GameActor() { SDL_Log("GameWorld.h          | Game actor destroyed"); }
 
 	virtual void Jump() = 0;
 	virtual void Attack() = 0;
