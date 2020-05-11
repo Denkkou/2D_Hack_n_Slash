@@ -5,6 +5,12 @@ GameWorld::GameWorld() {
 }
 
 GameWorld::~GameWorld() {
+    //deallocate music
+    Mix_FreeMusic(backgroundMusic);
+    Mix_FreeChunk(attackSound);
+    Mix_CloseAudio();
+    SDL_Log("Audio deallocated");
+
     SDL_Log("GameWorld destroyed");
 }
 
@@ -13,8 +19,28 @@ void GameWorld::Init() {
     window = SDL_CreateWindow("[Joe Schofield - SCH18683720] CGP2015M - 2D Hack 'n' Slash", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    player.playerSprite.Load(renderer, "content/sprites/player_sheet.png", false);
+    player.playerSprite.Load(renderer, "./content/sprites/player_sheet.png", false);
     SDL_Log("Player sprite loaded");
+
+    //initialise music and sfx files
+    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+        SDL_Log("WARNING: Audio has not been found!");
+    }
+    else {
+        //load files
+        backgroundMusic = Mix_LoadMUS("content/audio/backgroundMusic.wav");
+
+        //volume
+        Mix_VolumeMusic(musicVolume);
+        //Mix_VolumeChunk(attackSound, sfxVolume);
+    }
+
+    //play music
+    if (Mix_PlayingMusic() == 0)
+        Mix_PlayMusic(backgroundMusic, -1);
+    else
+        Mix_HaltMusic();
+
 
     //log initialisation
     SDL_Log("Game World initialised");
@@ -26,8 +52,16 @@ void GameWorld::Run() {
         //reset timer, begin counting
         timer.resetTicks();
 
+        //if (countdown <= 0)
+            //done = true;
+            //game over stuff
+
+        //update volume values
+        Mix_VolumeMusic(musicVolume);
+        //Mix_VolumeChunk(attackSound, sfxVolume);
+
         //receive input and handle
-        inputHandler.HandleInput(done, player, timeGetter, window);   
+        inputHandler.HandleInput(done, player, timeGetter, window, musicVolume, sfxVolume);   
        
         //update state of the game world
         Update();

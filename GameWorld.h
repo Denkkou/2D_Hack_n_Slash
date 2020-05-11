@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <SDL.h>
+#include <SDL_mixer.h>
 
 #include "InputHander.h"
 #include "Player.h"
@@ -34,6 +35,13 @@ private:
 	FrameTimer timer;
 	const int DELTA_TIME = 16;
 	bool done = false;
+
+	//music and sfx
+	Mix_Music* backgroundMusic = NULL;
+	Mix_Chunk* attackSound = NULL;
+
+	int sfxVolume = 128;
+	int musicVolume = 32;
 
 	bool detectedCollision(Player &player, TerrainObject* object);
 };

@@ -1,7 +1,7 @@
 #include "InputHander.h"
 
 //needs SDL quit code and a way of handling escape
-void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGetter, SDL_Window* window) {
+void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGetter, SDL_Window* window, int& musVol, int& sfxVol) {
     //event polling
     while (SDL_PollEvent(&_event)) {
         //timestamp
@@ -33,6 +33,24 @@ void InputHandler::HandleInput(bool& done, GameActor& player, GetTime& timeGette
         SDL_SetWindowBordered(window, SDL_TRUE);
         windowBorderless = false;
     }
+
+    //mute
+    if (keystate[SDL_SCANCODE_M]) {
+        musVol = 0;
+        sfxVol = 0;
+    }
+
+    //music volume control (brackets)
+    if (keystate[SDL_SCANCODE_LEFTBRACKET])
+        musVol -= 5;
+    if (keystate[SDL_SCANCODE_RIGHTBRACKET])
+        musVol += 5;
+
+    //sfx volume control (lshift + brackets)
+    if (keystate[SDL_SCANCODE_LSHIFT] && keystate[SDL_SCANCODE_LEFTBRACKET])
+        sfxVol -= 5;
+    if (keystate[SDL_SCANCODE_LSHIFT] && keystate[SDL_SCANCODE_RIGHTBRACKET])
+        sfxVol += 5;
 
     //reset acceleration every tick
     player.acceleration = 0;
