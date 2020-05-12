@@ -7,10 +7,9 @@ GameWorld::GameWorld() {
 GameWorld::~GameWorld() {
     //deallocate music
     Mix_FreeMusic(backgroundMusic);
-    Mix_FreeChunk(attackSound);
+    Mix_FreeChunk(coinSound);
     Mix_CloseAudio();
     SDL_Log("GameWorld.cpp        | Audio deallocated");
-
     SDL_Log("GameWorld.cpp        | GameWorld destroyed");
 }
 
@@ -40,11 +39,12 @@ void GameWorld::Init() {
     }
     else {
         //load files
-        backgroundMusic = Mix_LoadMUS("content/audio/backgroundMusic.wav");
+        backgroundMusic = Mix_LoadMUS("./content/audio/backgroundMusic.wav");
+        coinSound = Mix_LoadWAV("./content/audio/coinDing.wav");
 
         //volume
         Mix_VolumeMusic(musicVolume);
-        //Mix_VolumeChunk(attackSound, sfxVolume);
+        Mix_VolumeChunk(coinSound, sfxVolume);
     }
 
     //play music
@@ -74,7 +74,7 @@ void GameWorld::Run() {
         currentTime = SDL_GetTicks();
         if (currentTime > lastTime + 1000) {
             lastTime = currentTime;
-            SDL_Log("Timer: %i", countdownTimer);
+            SDL_Log("[GAME EVENT] Timer: %i", countdownTimer);
             countdownTimer--;
         }
 
@@ -111,7 +111,7 @@ void GameWorld::SplashScreen() {
         currentTime = SDL_GetTicks();
         if (currentTime > lastTime + 1000) {
             lastTime = currentTime;
-            SDL_Log("Splash Timer: %i", countdownTimer);
+            SDL_Log("[GAME EVENT] Splash Timer: %i", countdownTimer);
             countdownTimer--;
         }
 
@@ -135,12 +135,13 @@ void GameWorld::SplashScreen() {
         //check for timeout
         if (countdownTimer <= 0) {
             splashDone = true;
+            SDL_Log("[GAME EVENT] Splash Screen Closing");
         }
     }
 }
 
 void GameWorld::GameOverScreen() {
-    SDL_Log("game over screeeeen");
+    SDL_Log("[GAME EVENT] Game Over!!!");
     //SDL_Delay(10000);
 }
 
@@ -173,6 +174,21 @@ void GameWorld::Update() {
             player.MoveSidewaysOnCollision(terrainContainer.aListOfPillarObjects[i]->X, terrainContainer.aListOfPillarObjects[i]->W);
         }
     }
+
+    //detect coin collision
+    for (int i = 0; i < coinContainer.aListOfCoins.size(); i++) {
+        if (detectedCoinCollision(player, coinContainer.aListOfCoins[i])) {
+            SDL_Log("[GAME EVENT] Coin collected at x: %i, y: %i", player.posX, player.posY);
+
+            //call coins getPickedUp()
+            coinContainer.aListOfCoins[i]->GetPickedUp();
+            gameScore++;
+            SDL_Log("[GAME EVENT] Current Score: %i", gameScore);
+
+            //play sfx
+            Mix_PlayChannel(-1, coinSound, 0);
+        }
+    }
 }
 
 void GameWorld::Render() {
@@ -185,6 +201,7 @@ void GameWorld::Render() {
 
     //call the render function of all containers
     terrainContainer.Render(renderer);
+    coinContainer.Render(renderer);
     player.Render(renderer);
 
     //push changes
@@ -197,6 +214,17 @@ bool GameWorld::detectedCollision(Player &player, TerrainObject* object) {
         player.posX + player.width > object->X &&
         player.posY + (player.height - object->H) < object->Y &&
         player.posY + (player.height + player.feetBoxOffset) > object->Y) {
+        return true;
+    }
+    return false;
+}
+
+bool GameWorld::detectedCoinCollision(Player& player, Coin* object) {
+    //detect collision
+    if (player.posX  < object->X + object->W &&
+        player.posX + player.width > object->X &&
+        player.posY < object->Y + object->H &&
+        player.posY + player.height > object->Y) {
         return true;
     }
     return false;

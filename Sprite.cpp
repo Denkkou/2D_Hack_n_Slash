@@ -79,6 +79,11 @@ void Sprite::Update(int ticks, int playerX, int playerY, int state, int facing) 
 	}
 }
 
+void Sprite::MoveSprite(int x, int y) {
+	dstRect.x = x;
+	dstRect.y = y;
+}
+
 void Sprite::Render(SDL_Renderer* renderer) {
 	if (faceDirection == 2) //then flip
 		SDL_RenderCopyEx(renderer, texture, &srcRect, &dstRect, 0.0, NULL, SDL_FLIP_HORIZONTAL);

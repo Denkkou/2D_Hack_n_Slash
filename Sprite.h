@@ -15,6 +15,7 @@ public:
 	void SetAnimationSpeed(unsigned int speed);
 
 	void Update(int ticks, int playerX, int playerY, int state, int facing);
+	void MoveSprite(int x, int y);
 	void Render(SDL_Renderer* renderer);
 
 	int faceDirection;
