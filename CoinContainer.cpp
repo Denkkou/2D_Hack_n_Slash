@@ -15,6 +15,7 @@ CoinContainer::CoinContainer() {
 	AddCoin(380, 630);
 	AddCoin(380, 300);
 	AddCoin(380, 160);
+	AddCoin(500, 800);
 
 	//tower
 	AddCoin(700, 800);

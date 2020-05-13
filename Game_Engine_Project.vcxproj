@@ -28,6 +28,8 @@
     <ClCompile Include="Pillar.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ProgressBar.cpp" />
+    <ClCompile Include="ScreenText.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TerrainContainer.cpp" />
@@ -49,6 +51,8 @@
     <ClInclude Include="Pillar.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ProgressBar.h" />
+    <ClInclude Include="ScreenText.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TerrainContainer.h" />
     <ClInclude Include="TerrainObject.h" />

@@ -5,12 +5,17 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
+#include <SDL_ttf.h>
+#include <sstream>
+#include "ScreenText.h"
+
 #include "InputHander.h"
 #include "Player.h"
 #include "FrameTimer.h"
 
 #include "TerrainContainer.h"
 #include "CoinContainer.h"
+#include "ProgressBar.h"
 
 #include "GetTime.h"
 #include "Sprite.h"
@@ -28,6 +33,9 @@ public:
 	CoinContainer coinContainer;
 	Player player;
 	GetTime timeGetter;
+
+	ProgressBar countDownBar;
+	ProgressBar scoreBar;
 
 	void Init();
 	void Run();
@@ -49,6 +57,9 @@ private:
 	//graphic sprites
 	Sprite GameBackgroundSprite;
 	Sprite SplashGraphicSprite;
+	Sprite GameOverGraphicSprite;
+	Sprite TimeSprite;
+	Sprite ScoreSprite;
 
 	//music and sfx
 	Mix_Music* backgroundMusic = NULL;

@@ -18,7 +18,7 @@ Player::Player() {
 
 	//set up other attributes
 	health = 100;
-	maxSpeed = 10;
+	maxSpeed = 5;
 	maxFallSpeed = 15;
 	acceleration = 0;
 	jumpStrength = 15;

@@ -18,6 +18,15 @@ void GameWorld::Init() {
     window = SDL_CreateWindow("[Joe Schofield - SCH18683720] CGP2015M - 2D Hack 'n' Slash", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 900, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+    //progress bars
+    TimeSprite.Load(renderer, "./content/sprites/hourglass.png", false);
+    TimeSprite.Init(20, 20, 32, 42);
+    countDownBar.Init(70, 19, 600, 30, 5, 30);
+
+    ScoreSprite.Load(renderer, "./content/sprites/score.png", false);
+    ScoreSprite.Init(20, 69, 32, 42);
+    scoreBar.Init(70, 70, 600, 30, 5, coinContainer.aListOfCoins.size());
+
     //initialise player sprite
     player.playerSprite.Load(renderer, "./content/sprites/player_sheet.png", false);
     SDL_Log("GameWorld.cpp        | Player sprite loaded");
@@ -30,8 +39,12 @@ void GameWorld::Init() {
     GameBackgroundSprite.Init(0, 0, 1600, 900);
     GameBackgroundSprite.Load(renderer, "./content/sprites/background.png", false);
 
+    //initialise gameover sprite
+    GameOverGraphicSprite.Init(10, 10, 1580, 880);
+    GameOverGraphicSprite.Load(renderer, "./content/sprites/gameOver.png");
+
     //initialise for splash
-    countdownTimer = 10;
+    countdownTimer = 5;
 
     //initialise music and sfx files
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
@@ -84,7 +97,7 @@ void GameWorld::Run() {
         //update state of the game world
         Update();
 
-        //push changes to renderer
+        //render when updated
         Render();
 
         //delay for rest of frame
@@ -94,12 +107,13 @@ void GameWorld::Run() {
         //game over check
         if (countdownTimer <= 0) {
             done = true;
+            countdownTimer = 5;
             GameOverScreen();
         }
     }
 }
 
-//initial splash screen, 10 second countdown
+//initial splash screen, lasts 5 seconds
 void GameWorld::SplashScreen() {
     bool splashDone = false;
 
@@ -122,9 +136,6 @@ void GameWorld::SplashScreen() {
         //render graphic
         SplashGraphicSprite.Render(renderer);
 
-        //render screen text
-
-
         //push changes
         SDL_RenderPresent(renderer);
 
@@ -140,20 +151,55 @@ void GameWorld::SplashScreen() {
     }
 }
 
+//game over screen, lasts 5 seconds
 void GameWorld::GameOverScreen() {
-    SDL_Log("[GAME EVENT] Game Over!!!");
-    //SDL_Delay(10000);
-}
+    bool gameOverDone = false;
 
+    while (!gameOverDone) {
+        //reset timer, begin counting
+        timer.resetTicks();
+
+        //countdown timer code
+        currentTime = SDL_GetTicks();
+        if (currentTime > lastTime + 1000) {
+            lastTime = currentTime;
+            SDL_Log("[GAME EVENT] Game Over Timer: %i", countdownTimer);
+            countdownTimer--;
+        }
+
+        //draw something on screen
+        SDL_SetRenderDrawColor(renderer, 180, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        //render graphic
+        GameOverGraphicSprite.Render(renderer);
+
+        //push changes
+        SDL_RenderPresent(renderer);
+
+        //delay for rest of frame
+        if (timer.getTicks() < DELTA_TIME)
+            SDL_Delay(DELTA_TIME - timer.getTicks());
+
+        //check for timeout
+        if (countdownTimer <= 0) {
+            gameOverDone = true;
+            SDL_Log("[GAME EVENT] Game Over Screen Closing");
+        }
+    }
+}
 
 void GameWorld::Update() {
     //call the update function of all containers
     terrainContainer.Update();
     player.Update(timeGetter);
 
+    countDownBar.Update(countdownTimer);
+    scoreBar.Update(gameScore);
+
     //update volume values
     Mix_VolumeMusic(musicVolume);
-    //Mix_VolumeChunk(attackSound, sfxVolume);
+    Mix_VolumeChunk(coinSound, sfxVolume);
 
     //reset grounding
     player.stateMachine.IS_GROUNDED = false;
@@ -192,17 +238,23 @@ void GameWorld::Update() {
 }
 
 void GameWorld::Render() {
-    //clear screen with black
+    //clear screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
     //draw background
     GameBackgroundSprite.Render(renderer);
+    TimeSprite.Render(renderer);
+    ScoreSprite.Render(renderer);
 
     //call the render function of all containers
     terrainContainer.Render(renderer);
     coinContainer.Render(renderer);
     player.Render(renderer);
+
+    //draw bars
+    countDownBar.Render(renderer);
+    scoreBar.Render(renderer);
 
     //push changes
     SDL_RenderPresent(renderer);
